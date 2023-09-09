@@ -5,44 +5,39 @@
 
 
 from flask import Flask, render_template, request
-import joblib, locale
+import joblib
 
 
 # In[2]:
 
 
-# Set the locale to the user's default setting
-locale.setlocale(locale.LC_ALL, '')
+def formatINR(number):
+    s, *d = str(number).partition(".")
+    r = ",".join([s[x-2:x] for x in range(-3, -len(s), -2)][::-1] + [s[-3:]])
+    return "".join([r] + d)
 
 
 # In[3]:
 
 
-def format_currency(value):
-    return locale.currency(value, grouping=True)
-
-
-# In[4]:
-
-
 app = Flask(__name__)
 
 
-# In[5]:
+# In[4]:
 
 
 model = joblib.load('model.pkl')
 model
 
 
-# In[6]:
+# In[5]:
 
 
 scaler = joblib.load('scaler.pkl')
 scaler
 
 
-# In[7]:
+# In[6]:
 
 
 @app.route("/")
@@ -50,7 +45,7 @@ def home():
     return render_template('index.html')
 
 
-# In[8]:
+# In[7]:
 
 
 @app.route("/predict",methods=['GET','POST'])
@@ -102,12 +97,11 @@ def predict():
                  departure_time]]
         
         scaled_data = scaler.transform(data)
-        pred = format_currency(round(model.predict(scaled_data)[0],2))
-        pred = ''.join(pred.split())
-        return render_template('index.html',prediction_text=f"The predicted price of your flight is {pred}.")
+        pred = formatINR(round(model.predict(scaled_data)[0],2))
+        return render_template('index.html',prediction_text=f"The predicted price of your flight is ₹{pred}.")
 
 
-# In[9]:
+# In[ ]:
 
 
 if __name__ == '__main__':
