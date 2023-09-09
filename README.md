@@ -6,7 +6,7 @@ The objective of the study is to analyze the flight booking dataset obtained fro
 
 ### Research Questions
 
-The aim of our study is to answer the below research questions:
+The aim of this study is to answer the below research questions:
 
 a) Does the price vary with Airlines? <br>
 b) How is the price affected when tickets are bought just 1 or 2 days before departure? <br>
